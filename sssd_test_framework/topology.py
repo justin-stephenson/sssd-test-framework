@@ -20,6 +20,13 @@ __all__ = [
     "KnownTopologyGroup",
 ]
 
+class ExampleController(TopologyController):
+    # Override methods that you wish to use
+    def skip(self, client: ClientHost) -> str | None:
+        result = client.ssh.run("exit 1", raise_on_error=False)
+        if result.rc != 0:
+            return "Topology requirements were not met"
+        return None
 
 class SSSDTopologyMark(TopologyMark):
     """
@@ -219,6 +226,12 @@ class KnownTopology(KnownTopologyBase):
     .. topology-mark:: KnownTopology.IPATrustSamba
     """
 
+    EXAMPLE = SSSDTopologyMark(
+        name='example',
+        topology=Topology(TopologyDomain("sssd", client=1)),
+        controller=ExampleController(),
+        fixtures=dict(client='sssd.client[0]'),
+    )
 
 class KnownTopologyGroup(KnownTopologyGroupBase):
     """
