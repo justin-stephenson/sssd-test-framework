@@ -81,6 +81,10 @@ class Client(BaseLinuxRole[ClientHost]):
         #. import implicit domains from topology marker
         """
         super().setup()
+
+        self.logger.info("Raising error, this will be visible in logs. SSSD artifacts will be collected.")
+        raise Exception("Setup error")
+
         self.sssd.stop()
         self.sssd.clear(db=True, memcache=True, logs=True, config=True)
 
