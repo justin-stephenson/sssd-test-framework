@@ -67,6 +67,12 @@ class IPAHost(BaseDomainHost, BaseLinuxHost):
         if "realm" not in self.config:
             self.realm = self.domain.upper()
 
+    def pytest_setup(self) -> None:
+        self.logger.info("Adding COPR and updating packages")
+        self.conn.exec(["dnf", "copr", "enable", "abbra/wip-ipa-trust", "-y"])
+        self.conn.exec(["dnf", "update", "freeipa-server", "sssd-client", "-y"])
+        self.conn.exec(["systemctl", "restart", "sssd-kcm"])
+
     @property
     def features(self) -> dict[str, bool]:
         """

@@ -30,6 +30,11 @@ class ClientHost(BaseBackupHost, BaseLinuxHost):
 
         self._features: dict[str, bool] | None = None
 
+    def pytest_setup(self) -> None:
+        self.logger.info("Adding COPR and updating packages")
+        self.conn.exec(["dnf", "copr", "enable", "abbra/wip-ipa-trust", "-y"])
+        self.conn.exec(["dnf", "update", "sssd-client", "-y"])
+
     @property
     def features(self) -> dict[str, bool]:
         """
