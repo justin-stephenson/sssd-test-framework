@@ -1384,7 +1384,7 @@ class IPAHostAccount(IPAObject):
         self,
         *,
         description: str | None = None,
-        ip: str,
+        ip: str | None = None,
         sshpubkey: str | list[str] | None = None,
     ) -> IPAHostAccount:
         """
